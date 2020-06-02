@@ -13,6 +13,8 @@ const OUTPUT_DIR = path.resolve(__dirname, "output")
 // Move this declaration to within the user prompt, after the user has specified a file name
 const outputPath = path.join(OUTPUT_DIR, "team.html");
 
+const team = {};
+
 // Define an async await function which creates a team profile HTML file based on user input
 async function createTeamTemplate() {
     try {
@@ -59,7 +61,29 @@ async function createTeamTemplate() {
             name : "teamName"
         });
 
-        
+                
+        // Prompt the user to enter information about the manager
+        const managerData = await inquirer.prompt([{
+            message : "Enter the name of the team manager: ",
+            name : "name"
+        },
+        {
+            message : "Enter the manager's ID number: ",
+            name : "id"
+        },
+        {
+            message : "Enter the manager's email address: ",
+            name : "email"
+        },
+        {
+            message : "Enter the manager's office phone number: ",
+            name : "officeNumber"
+        }]);
+
+        const manager = new Manager(managerData.name, managerData.id, managerData.email, managerData.officeNumber);
+
+        team.manager = manager;
+
     } catch (error) {
         console.log(error);
     }
