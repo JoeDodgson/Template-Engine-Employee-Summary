@@ -11,9 +11,15 @@ const render = require("./lib/htmlRenderer");
 // Promisify the writeFile function
 const writeFileAsync = util.promisify(fs.writeFile);
 
-// Define the output directory
-const OUTPUT_DIR = path.resolve(__dirname, "output")
+// Define the output directory and CSS output filepath
+const OUTPUT_DIR = path.resolve(__dirname, "output");
+const cssOutputPath = path.join(OUTPUT_DIR, "style.css");
 
+// Define the template directory and CSS template filepath
+const TEMPLATE_DIR = path.resolve(__dirname, "templates");
+const cssTemplatePath = path.join(TEMPLATE_DIR, "style.css");
+
+// Define a blank employees array
 const employees = [];
 
 // Define an async await function which creates a team profile HTML file based on user input
@@ -42,7 +48,7 @@ async function createTeamTemplate() {
         fileName += ".html";
 
         // Join the output directory with the file name
-        const outputPath = path.join(OUTPUT_DIR, fileName);
+        const htmlOutputPath = path.join(OUTPUT_DIR, fileName);
         
         // Check if the 'output' folder exists and create it if it does not
         if (!fs.existsSync(OUTPUT_DIR)) {
@@ -50,7 +56,7 @@ async function createTeamTemplate() {
         }
         
         // Else, check if there is an existing template file which may be overwritten.
-        else if (fs.existsSync(outputPath)) {
+        else if (fs.existsSync(htmlOutputPath)) {
             // Tell user this will overwrite existing template file. Ask if they want to continue
             const { stillContinueYN } = await inquirer.prompt({
                 type : "list",
@@ -177,10 +183,13 @@ async function createTeamTemplate() {
         const htmlContent = render(employees);
 
         // Now write it to a file named `team.html` in the output folder. 
-        const file = await writeFileAsync(outputPath, htmlContent);
+        const htmlFile = await writeFileAsync(htmlOutputPath, htmlContent);
         
-        // // Display a message to say the file has been created
-        // console.log("Your team profile HTML file was created successfully!");
+        // Create a copy of the style.css file
+        const cssFile = await fs.copyFileSync(cssTemplatePath, cssOutputPath);
+        
+        // Display a message to say the file has been created
+        console.log("Your team profile HTML file and style.css file were created successfully!");
 
     } catch (error) {
         console.log(error);
