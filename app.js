@@ -180,7 +180,7 @@ async function createTeamTemplate() {
         }
 
         // After the user has input all employees, pass the 'employees' array into the render function
-        const htmlContent = render(employees);
+        const htmlContent = render(employees,teamName);
 
         // Now write it to a file named `team.html` in the output folder. 
         const htmlFile = await writeFileAsync(htmlOutputPath, htmlContent);
