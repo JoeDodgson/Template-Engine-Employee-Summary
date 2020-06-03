@@ -1,0 +1,39 @@
+.card {
+    width: 250px;
+}
+
+.manager-header {
+    background-color: red;
+}
+
+.engineer-header {
+    background-color: orange;
+}
+
+.intern-header {
+    background-color: green;
+}
+
+.role-title {
+    width: 100%;
+    text-align: center;
+    margin-top: 25px;
+}
+
+.col-4 {
+    padding: 0;
+}
+
+.employee-card {
+    margin: 10px;
+}
+
+.team-heading {
+    background-color: blue;
+    color: white;
+    border-radius: 0;
+}
+
+.card-body {
+    padding: 12px;
+}

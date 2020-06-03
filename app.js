@@ -5,13 +5,14 @@ const Intern = require("./lib/Intern");
 const inquirer = require("inquirer");
 const path = require("path");
 const fs = require("fs");
+const util = require("util");
 const render = require("./lib/htmlRenderer");
+
+// Promisify the writeFile function
+const writeFileAsync = util.promisify(fs.writeFile);
 
 // Define the output directory
 const OUTPUT_DIR = path.resolve(__dirname, "output")
-
-// Move this declaration to within the user prompt, after the user has specified a file name
-const outputPath = path.join(OUTPUT_DIR, "team.html");
 
 const employees = [];
 
@@ -32,15 +33,24 @@ async function createTeamTemplate() {
         };
         
         // Ask the user what file name they would like
-        const { fileName } = await inquirer.prompt({
+        let { fileName } = await inquirer.prompt({
             message : "Enter a file name for your new team profile page (do not include the .html file extension in the file name): ",
             name : "fileName"
         });
         
-        const filePath = `./output/${fileName}.html`;
+        // Concatenate .html file extension onto the end of the file name
+        fileName += ".html";
+
+        // Join the output directory with the file name
+        const outputPath = path.join(OUTPUT_DIR, fileName);
         
-        // Check if there is an existing template file which may be overwritten.
-        if(fs.existsSync(filePath)) {
+        // Check if the 'output' folder exists and create it if it does not
+        if (!fs.existsSync(OUTPUT_DIR)) {
+            fs.mkdirSync(OUTPUT_DIR);
+        }
+        
+        // Else, check if there is an existing template file which may be overwritten.
+        else if (fs.existsSync(outputPath)) {
             // Tell user this will overwrite existing template file. Ask if they want to continue
             const { stillContinueYN } = await inquirer.prompt({
                 type : "list",
@@ -162,19 +172,14 @@ async function createTeamTemplate() {
                 choices : ["Add another team member","Generate team profile HTML page"]                
             });
         }
-        
 
-        // After the user has input all employees desired, call the `render` function (required
-        // above) and pass in an array containing all employee objects; the `render` function will
-        // generate and return a block of HTML including templated divs for each employee!
-        // ----------------​
-        // After you have your html, you're now ready to create an HTML file using the HTML
-        // returned from the `render` function. Now write it to a file named `team.html` in the
-        // `output` folder. You can use the variable `outputPath` above target this location.
-        // Hint: you may need to check if the `output` folder exists and create it if it
-        // does not.
+        // After the user has input all employees, pass the 'employees' array into the render function
+        const htmlContent = render(employees);
+
+        // Now write it to a file named `team.html` in the output folder. 
+        const file = await writeFileAsync(outputPath, htmlContent);
         
-        // // Give a message to tell the user the file has been created.
+        // // Display a message to say the file has been created
         // console.log("Your team profile HTML file was created successfully!");
 
     } catch (error) {
@@ -187,7 +192,3 @@ createTeamTemplate();
 
 
 // // Create a team profile HTML file and write the content based on user input
-// const htmlContent = 
-// `# ${answers.title}\n\n## Table of contents:\n1. Description\n2. Installation\n3. Usage\n4. Author\n5. Contributing\n6. License\n7. Tests\n8. Contact\n\n## 1. Description:\n${answers.description}\n\n## 2. Installation:\n${answers.installation}\n\n## 3. Usage:\n${answers.usage}\n\n## 4. Author:\n${answers.name}\nGithub username: ${answers.username}\n<img src="${data.avatar_url}">\n\n## 5. Contributing:\n${answers.contributing}\n\n## 6. License:\n\n${licenseShieldMD}\n\n## 7. Tests:\nThe project passed the following tests:\n${answers.tests}\n\n## 8. Contact:\nFor any questions about this project, please contact ${answers.name} at the following email address:\n${email.address}`;
-
-// const file = await writeFileAsync(filePath, htmlContent);
