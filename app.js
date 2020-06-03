@@ -13,11 +13,7 @@ const OUTPUT_DIR = path.resolve(__dirname, "output")
 // Move this declaration to within the user prompt, after the user has specified a file name
 const outputPath = path.join(OUTPUT_DIR, "team.html");
 
-const team = {
-    manager : {},
-    engineers : [],
-    interns : []
-};
+const employees = [];
 
 // Define an async await function which creates a team profile HTML file based on user input
 async function createTeamTemplate() {
@@ -87,18 +83,18 @@ async function createTeamTemplate() {
         // Use the data entered by the user to create a new manager object using the Manager class
         const manager = new Manager(managerData.name, managerData.id, managerData.email, managerData.officeNumber);
         
-        // Set the 'manager' property of the 'team' object to the newly created manager object
-        team.manager = manager;
+        // Push the newly created 'manager' object into the 'employees' array
+        employees.push(manager);
         
         // Ask the user if they would like to add another team member or generate the HTML page
-        let { addOrGenerate } = await inquirer.prompt({
+        let nextAction = await inquirer.prompt({
             type : "list",
             message : "What would you like to do next?", 
             name : "addOrGenerate",
             choices : ["Add another team member","Generate team profile HTML page"]                
         });
         
-        while (addOrGenerate === "Add another team member") {
+        while (nextAction.addOrGenerate === "Add another team member") {
             // Ask the user whether they would like to add an Engineer or Intern to the team
             let { newMemberType } = await inquirer.prompt({
                 type : "list",
@@ -129,8 +125,8 @@ async function createTeamTemplate() {
                 // Use the data entered by the user to create a new engineer object using the engineer class
                 let engineer = new Engineer(engineerData.name, engineerData.id, engineerData.email, engineerData.github);
                 
-                // Set the 'engineer' property of the 'team' object to the newly created engineer object
-                team.engineers.push(engineer);
+                // Push the newly created 'engineer' object into the 'employees' array
+                employees.push(engineer);
             }
 
             else if (newMemberType === "Intern") {
@@ -155,11 +151,11 @@ async function createTeamTemplate() {
                 // Use the data entered by the user to create a new intern object using the intern class
                 let intern = new Intern(internData.name, internData.id, internData.email, internData.school);
                 
-                // Set the 'intern' property of the 'team' object to the newly created intern object
-                team.interns.push(intern);
+                // Push the newly created 'intern' object into the 'employees' array
+                employees.push(intern);
             }
             
-            addOrGenerate = { addOrGenerate } = await inquirer.prompt({
+            nextAction = await inquirer.prompt({
                 type : "list",
                 message : "What would you like to do next?", 
                 name : "addOrGenerate",
@@ -167,6 +163,7 @@ async function createTeamTemplate() {
             });
         }
         
+
         // After the user has input all employees desired, call the `render` function (required
         // above) and pass in an array containing all employee objects; the `render` function will
         // generate and return a block of HTML including templated divs for each employee!
