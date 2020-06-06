@@ -198,6 +198,3 @@ async function createTeamTemplate() {
 
 // Call the createTeamTemplate function
 createTeamTemplate();
-
-
-// // Create a team profile HTML file and write the content based on user input

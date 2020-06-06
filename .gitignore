@@ -1,8 +1,10 @@
-node_modules
 .DS_store
+Assets
+demo
+node_modules
+output
 requirements.md
 tasklist.md
 templates
-test
-Assets
 templates/main-altogether.html
+test
