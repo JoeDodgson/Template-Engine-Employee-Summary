@@ -60,7 +60,7 @@ async function createTeamTemplate() {
             // Tell user this will overwrite existing template file. Ask if they want to continue
             const { stillContinueYN } = await inquirer.prompt({
                 type : "list",
-                message : `A file named ${fileName}.html already exists in the output folder.\nThis will be overwritten when you run this script.\nDo you want to continue? `, 
+                message : `A file named ${fileName} already exists in the output folder.\nThis will be overwritten when you run this script.\nDo you want to continue? `, 
                 name : "stillContinueYN",
                 choices : ["Yes", "No"]                
             });
