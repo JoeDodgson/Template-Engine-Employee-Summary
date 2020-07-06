@@ -91,17 +91,30 @@ async function createTeamTemplate() {
             name : "id"
         },
         {
-            message : "Enter the manager's email address: ",
-            name : "email"
-        },
-        {
             message : "Enter the manager's office phone number: ",
             name : "officeNumber"
+        },
+        {
+            message : "Enter the manager's email address: ",
+            name : "email"
         }]);
         
         // Use the data entered by the user to create a new manager object using the Manager class
         const manager = new Manager(managerData.name, managerData.id, managerData.email, managerData.officeNumber);
-        
+
+        // Check if the user has entered a valid email address
+        let trueEmail = validator.isEmail(manager.email);
+
+        // If user has not entered a valid email address, ask them to enter a different one
+        while (!trueEmail) {
+            alternativeEmail = await inquirer.prompt({
+                message : "The email address you entered was invalid. Please enter another one: ",
+                name : "email"
+            });
+            trueEmail = validator.isEmail(alternativeEmail.email);
+            manager.email = alternativeEmail.email;
+        }
+
         // Push the newly created 'manager' object into the 'employees' array
         employees.push(manager);
         
