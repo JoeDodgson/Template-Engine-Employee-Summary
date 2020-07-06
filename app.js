@@ -1,11 +1,14 @@
-// Require in all necessary modules
-const Manager = require("./lib/Manager");
-const Engineer = require("./lib/Engineer");
-const Intern = require("./lib/Intern");
+// Require in node modules
 const inquirer = require("inquirer");
 const path = require("path");
 const fs = require("fs");
 const util = require("util");
+const validator = require("validator");
+
+// Require in local files
+const Manager = require("./lib/Manager");
+const Engineer = require("./lib/Engineer");
+const Intern = require("./lib/Intern");
 const render = require("./lib/htmlRenderer");
 
 // Promisify the writeFile function

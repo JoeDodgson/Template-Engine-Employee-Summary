@@ -23,7 +23,8 @@
   "dependencies": {
     "fs": "0.0.1-security",
     "inquirer": "^6.5.2",
-    "util": "^0.12.3"
+    "util": "^0.12.3",
+    "validator": "^13.1.1"
   },
   "devDependencies": {
     "jest": "^24.9.0",
